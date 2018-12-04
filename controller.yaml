@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: hellok8s
+  labels:
+    app: hellok8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hellok8s
+  template:
+    metadata:
+      labels:
+        app: hellok8s
+    spec:
+      containers:
+      - name: hellok8s
+        image: 192.168.137.128:5000/hellok8s:0.3.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "256Mi"
+          requests:
+            memory: "256Mi"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: log-config
+          mountPath: /data/logs
+        - name: tz-config
+          mountPath: /etc/localtime
+      volumes:
+      - name: log-config
+        hostPath:
+          path: /var/log/containers/ 
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime 
